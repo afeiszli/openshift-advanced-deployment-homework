@@ -5,7 +5,7 @@
 ###########################################################################
 timeout=60
 ansible_become=yes
-ansible_ssh_user=ec2-user
+ansible_ssh_user=root
 
 ###########################################################################
 ### OpenShift Basic Vars
@@ -38,7 +38,7 @@ openshift_master_api_port=443
 openshift_master_console_port=443
 
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=loadbalancer.8613.internal
+openshift_master_cluster_hostname=loadbalancer.example.com
 openshift_master_cluster_public_hostname=loadbalancer.8613.example.opentlc.com
 openshift_master_default_subdomain=apps.8613.example.opentlc.com
 
@@ -111,25 +111,23 @@ lb
 masters
 etcd
 nodes
-nfs
+#nfs
 
 [lb]
-loadbalancer.8613.internal 
+loadbalancer1.example.com
 
 [masters]
-master[1:3].8613.internal 
+master[1:3].example.com
 
 [etcd]
-master[1:3].8613.internal 
+master[1:3].example.com
 
 
 [nodes]
 ## These are the masters
-master[1:3].8613.internal openshift_node_labels="{'logging':'true','openshift_schedulable':'False','cluster': '8613'}"
+master[1:3].example.com openshift_node_labels="{'logging':'true','openshift_schedulable':'False','cluster': '8613'}"
 ## These are infranodes
-infranode[1:2].8613.internal openshift_node_labels="{'logging':'true','cluster': '8613', 'env':'infra'}"
+infranode[1:2].example.com openshift_node_labels="{'logging':'true','cluster': '8613', 'env':'infra'}"
 ## These are regular nodes
-node[1:3].8613.internal openshift_node_labels="{'logging':'true','cluster': '8613', 'env':'app'}"
+node[1:3].example.com openshift_node_labels="{'logging':'true','cluster': '8613', 'env':'app'}"
 
-[nfs]
-support1.8613.internal 

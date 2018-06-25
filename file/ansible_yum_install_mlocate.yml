@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+    - name: Ensure that mlocate is installed and at the latest version
+      yum:
+        name: mlocate
+        state: present

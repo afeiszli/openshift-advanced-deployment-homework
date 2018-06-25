@@ -74,7 +74,7 @@ infranode[1:3].example.com openshift_node_labels="{'env':'infra', 'cluster':'861
 node[1:6].example.com openshift_node_labels="{'env':'app', 'cluster':'8613'}"
 
 [lb]
-loadbalancer1.example.com openshift_node_labels="{'cluster':'8613'}
+loadbalancer1.example.com openshift_node_labels="{'cluster':'8613'}"
 
 
 
