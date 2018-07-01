@@ -1,4 +1,4 @@
-# hosts file for 8613.oslab.opentlc.com
+# hosts file for d3be.oslab.opentlc.com
 [OSEv3:children]
 masters
 etcd
@@ -31,9 +31,9 @@ osm_host_subnet_length=9
 
 #DNS Variables
 #openshift_master_cluster_public_hostname=loadbalancer1-${GUID}.${DOMAIN}
-openshift_master_cluster_public_hostname=loadbalancer1-8613.oslab.opentlc.com
+openshift_master_cluster_public_hostname=loadbalancer1-d3be.oslab.opentlc.com
 openshift_master_cluster_hostname=loadbalancer1.example.com
-openshift_master_default_subdomain=apps.8613.oslab.opentlc.com
+openshift_master_default_subdomain=apps.d3be.oslab.opentlc.com
 
 #HA Load Balancing using the internal HA Proxy
 openshift_master_cluster_method=native
@@ -46,6 +46,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 openshift_master_htpasswd_users={'admin': '$apr1$6CZ4noKr$IksMFMgsW5e5FL0ioBhkk/', 'developer': '$apr1$AvisAPTG$xrVnJ/J0a83hAYlZcxHVf1'}
 
 # LDAP Authentication (download ipa-ca.crt first)
+# Set this up using the ipa host.
 # openshift_master_identity_providers=[{'name': 'ldap', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider','attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': 'uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com', 'bindPassword': 'r3dh4t1!', 'ca': '/etc/origin/master/ipa-ca.crt','insecure': 'false', 'url': 'ldaps://ipa.shared.example.opentlc.com:636/cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com?uid?sub?(memberOf=cn=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)'}]
 # openshift_master_ldap_ca_file=/root/ipa-ca.crt
 
@@ -54,9 +55,8 @@ openshift_master_htpasswd_users={'admin': '$apr1$6CZ4noKr$IksMFMgsW5e5FL0ioBhkk/
 
 #Persistent Storage for the internal Registry.
 #Using NFS which needs to be setup prior to the running of the inventory file.
-#TODO: Find out where the NFS storage is actually located at and what to do about it?
 
-# configure a pv that mounts "nfs.example.com:/exports/registry"
+# configure a pv that mounts "oselab.example.com:/exports/registry"
 openshift_hosted_registry_storage_kind=nfs
 openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
 openshift_hosted_registry_storage_host=nfs.example.com
@@ -66,12 +66,15 @@ openshift_hosted_registry_storage_volume_size=100Gi
 
 
 [masters]
-master[1:3].example.com openshift_node_labels="{'env':'master', 'region': 'master', 'openshift_schedulable':'False', 'cluster':8613'}"
+master[1:3].example.com openshift_node_labels="{'env':'master', 'region': 'master', 'openshift_schedulable':'False', 'cluster':d3be'}"
 [etcd]
-master[1:3].example.com openshift_node_labels="{'env':'master', 'region': 'master', 'openshift_schedulable':'False', 'cluster':8613'}"
+master[1:3].example.com openshift_node_labels="{'env':'master', 'region': 'master', 'openshift_schedulable':'False', 'cluster':d3be'}"
 [nodes]
-infranode[1:3].example.com openshift_node_labels="{'env':'infra', 'cluster':'8613'}"
-node[1:6].example.com openshift_node_labels="{'env':'app', 'cluster':'8613'}"
+infranode[1:2].example.com openshift_node_labels="{'env':'infra', 'cluster':'d3be'}"
+node[1:6].example.com openshift_node_labels="{'env':'app', 'cluster':'d3be'}"
 
 [lb]
-loadbalancer1.example.com openshift_node_labels="{'cluster':'8613'}"
+loadbalancer1.example.com openshift_node_labels="{'cluster':'d3be'}"
+
+[nfs]
+infranode3.example.com openshift_node_labels="{'env':'nfs', 'cluster':'d3be'}"
