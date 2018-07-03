@@ -12,7 +12,7 @@
 GUID=`hostname | cut -d"." -f2`
 echo "GUID idenfied as $GUID"
 export GUID=$GUID
-#echo "export GUID=$GUID" >> $HOME/.bashrc
+echo "export GUID=$GUID" >> $HOME/.bashrc
 echo "Setting the GUID environment variable in the .bashrc on each of the hosts"
 ansible all -m shell -a 'export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc'
 

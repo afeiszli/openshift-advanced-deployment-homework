@@ -1,0 +1,64 @@
+[OSEv3:vars]
+
+###########################################################################
+### Ansible Vars
+###########################################################################
+timeout=60
+ansible_become=yes
+ansible_ssh_user=ec2-user
+
+# disable memory check, as we are not a production environment
+openshift_disable_check="memory_availability"
+
+# Set this line to enable NFS
+openshift_enable_unsupported_configurations=True
+
+
+###########################################################################
+### OpenShift Hosts
+###########################################################################
+[OSEv3:children]
+lb
+masters
+etcd
+nodes
+nfs
+#glusterfs
+
+[lb]
+loadbalancer1.ae9d.internal
+
+[masters]
+master1.ae9d.internal
+master2.ae9d.internal
+master3.ae9d.internal
+
+[etcd]
+master1.ae9d.internal
+master2.ae9d.internal
+master3.ae9d.internal
+
+[nodes]
+## These are the masters
+master1.ae9d.internal openshift_hostname=master1.ae9d.internal  openshift_node_labels="{'env': 'master', 'cluster': 'ae9d'}"
+master2.ae9d.internal openshift_hostname=master2.ae9d.internal  openshift_node_labels="{'env': 'master', 'cluster': 'ae9d'}"
+master3.ae9d.internal openshift_hostname=master3.ae9d.internal  openshift_node_labels="{'env': 'master', 'cluster': 'ae9d'}"
+
+## These are infranodes
+infranode1.ae9d.internal openshift_hostname=infranode1.ae9d.internal  openshift_node_labels="{'env':'infra', 'cluster': 'ae9d'}"
+infranode2.ae9d.internal openshift_hostname=infranode2.ae9d.internal  openshift_node_labels="{'env':'infra', 'cluster': 'ae9d'}"
+
+## These are regular nodes
+node1.ae9d.internal openshift_hostname=node1.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster': 'ae9d'}"
+node2.ae9d.internal openshift_hostname=node2.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster': 'ae9d'}"
+node3.ae9d.internal openshift_hostname=node3.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster': 'ae9d'}"
+node4.ae9d.internal openshift_hostname=node4.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster': 'ae9d'}"
+
+## These are CNS nodes
+# support1.ae9d.internal openshift_hostname=support1.ae9d.internal  openshift_node_labels="{'env':'glusterfs', 'cluster': 'ae9d'}"
+
+[nfs]
+support1.ae9d.internal openshift_hostname=support1.ae9d.internal
+
+#[glusterfs]
+# support1.ae9d.internal glusterfs_devices='[ "/dev/xvdd" ]'
