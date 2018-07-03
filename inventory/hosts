@@ -1,75 +1,56 @@
-# hosts file for d3be.oslab.opentlc.com
-[OSEv3:children]
-masters
-etcd
-nodes
-lb
-nfs
-
 [OSEv3:vars]
-#User we will ssh around as
-ansible_user=ec2-user
-#Open Source or Commercial Version
-openshift_deployment_type=openshift-enterprise
-#Trying to set this to 3.7, but may need to use 3.5 if that is what the homework environment wants.
-openshift_release=v3.7
+# Ansible Variables
 timeout=60
 ansible_become=yes
+ansible_user=ec2-user
+
+# OpenShift Basic Variables
+openshift_deployment_type=openshift-enterprise
+openshift_release=v3.7
+containerized=false
 openshift_disable_check="memory_availability"
+
 
 # Default node selectors
 osm_default_node_selector='env=app'
 openshift_hosted_infra_selector="env=infra"
+
 # selectors for router and registry services
 openshift_router_selector='env=infra'
 openshift_registry_selector='env=infra'
 
 
-#Network Variables
+
+# OpenShift Network Variables
+#osm_cluster_network_cidr=10.128.0.0/14
+#openshift_portal_net=172.30.0.0/16
+#osm_host_subnet_length=9
+
+#os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+os_sdn_network_plugin_name='redhat/openshift-ovs-subnet'
+
+# OpenShift Master Variables
+# Network Variables
 openshift_master_api_port=443
 openshift_master_console_port=443
-osm_cluster_network_cidr=10.128.0.0/14
-openshift_portal_net=172.30.0.0/16
-osm_host_subnet_length=9
-os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
-
-
-#DNS Variables
-#openshift_master_cluster_public_hostname=loadbalancer1-${GUID}.${DOMAIN}
-openshift_master_cluster_public_hostname=loadbalancer1-d3be.oslab.opentlc.com
-openshift_master_cluster_hostname=loadbalancer.d3be.com
-openshift_master_default_subdomain=apps.d3be.oslab.opentlc.com
-
 #HA Load Balancing using the internal HA Proxy
 openshift_master_cluster_method=native
+#DNS Variables
+#openshift_master_cluster_public_hostname=loadbalancer1.${GUID}.${DOMAIN}
+openshift_master_cluster_public_hostname=loadbalancer1.d3be.oslab.opentlc.com
+openshift_master_cluster_hostname=loadbalancer1.d3be.com
+openshift_master_default_subdomain=apps.d3be.oslab.opentlc.com
+openshift_master_overwrite_named_certificates=True
+# Needed to enable nfs support
+openshift_enable_unsupported_configurations=True
+
+
 
 
 # LDAP Authentication (download ipa-ca.crt first)
 # Set this up using the ipa host.
 openshift_master_identity_providers=[{'name': 'ldap', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider','attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': 'uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com', 'bindPassword': 'r3dh4t1!', 'ca': '/etc/origin/master/ipa-ca.crt','insecure': 'false', 'url': 'ldaps://ipa.shared.example.opentlc.com:636/cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com?uid?sub?(memberOf=cn=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)'}]
 openshift_master_ldap_ca_file=/root/ipa-ca.crt
-
-
-# Enable cluster logging
-openshift_logging_install_logging=True
-#
-openshift_logging_storage_kind=nfs
-openshift_logging_storage_access_modes=['ReadWriteOnce']
-openshift_logging_storage_nfs_directory=/srv/nfs
-openshift_logging_storage_nfs_options='*(rw,root_squash)'
-openshift_logging_storage_volume_name=logging
-openshift_logging_storage_volume_size=10Gi
-openshift_logging_storage_labels={'storage': 'logging'}
-
-# openshift_logging_kibana_hostname=kibana.apps.$GUID.example.opentlc.com
-openshift_logging_es_cluster_size=1
-
-openshift_logging_es_nodeselector={"env":"infra"}
-openshift_logging_kibana_nodeselector={"env":"infra"}
-openshift_logging_curator_nodeselector={"env":"infra"}
-
-# Configure additional projects
-openshift_additional_projects={'openshift-template-service-broker': {'default_node_selector': ''}}
 
 
 ###########################################################################
@@ -134,6 +115,27 @@ openshift_metrics_cassandra_nodeselector={"env":"infra"}
 openshift_metrics_hawkular_nodeselector={"env":"infra"}
 openshift_metrics_heapster_nodeselector={"env":"infra"}
 
+# Enable cluster logging
+openshift_logging_install_logging=True
+#
+openshift_logging_storage_kind=nfs
+openshift_logging_storage_access_modes=['ReadWriteOnce']
+openshift_logging_storage_nfs_directory=/srv/nfs
+openshift_logging_storage_nfs_options='*(rw,root_squash)'
+openshift_logging_storage_volume_name=logging
+openshift_logging_storage_volume_size=10Gi
+openshift_logging_storage_labels={'storage': 'logging'}
+
+# openshift_logging_kibana_hostname=kibana.apps.$GUID.example.opentlc.com
+openshift_logging_es_cluster_size=1
+
+openshift_logging_es_nodeselector={"env":"infra"}
+openshift_logging_kibana_nodeselector={"env":"infra"}
+openshift_logging_curator_nodeselector={"env":"infra"}
+
+
+#### Prometheus Variables (Online - Not the disconnected type)
+
 #Add Prometheus Metrics:
 openshift_hosted_prometheus_deploy=true
 openshift_prometheus_node_selector={"env":"infra"}
@@ -167,15 +169,19 @@ openshift_prometheus_alertbuffer_storage_volume_size=10Gi
 openshift_prometheus_alertbuffer_storage_labels={'storage': 'prometheus-alertbuffer'}
 openshift_prometheus_alertbuffer_storage_type='pvc'
 
-#Already set in the disconnected section
+# Necessary because of a bug in the installer on 3.9
 openshift_prometheus_node_exporter_image_version=v3.9
 
-#Enable cluster logging
-openshift_logging_install_logging=True
 
-
-
-
+###########################################################################
+#### OpenShift Hosts
+############################################################################
+[OSEv3:children]
+lb
+masters
+etcd
+nodes
+nfs
 
 
 # Ansible Group Definitions
@@ -184,21 +190,18 @@ openshift_logging_install_logging=True
 
 
 [lb]
-loadbalancer1.d3be.internal openshift_node_labels="{'cluster':'d3be'}"
+loadbalancer1.d3be.internal 
 
 [masters]
-master[1:3].d3be.internal openshift_node_labels="{'env':'master', 'openshift_schedulable':'False', 'cluster':d3be'}"
-
+master[1:3].d3be.internal 
 
 [etcd]
-master[1:3].d3be.internal openshift_node_labels="{'env':'master', 'openshift_schedulable':'False', 'cluster':d3be'}"
-
+master[1:3].d3be.internal 
 
 [nodes]
 master[1:3].d3be.internal openshift_node_labels="{'env':'master', 'openshift_schedulable':'False', 'cluster':d3be'}"
 infranode[1:2].d3be.internal openshift_node_labels="{'env':'infra', 'cluster':'d3be'}"
 node[1:4].d3be.internal openshift_node_labels="{'env':'app', 'cluster':'d3be'}"
-
 
 [nfs]
 support1.d3be.internal openshift_node_labels="{'env':'nfs', 'cluster':'d3be'}"
