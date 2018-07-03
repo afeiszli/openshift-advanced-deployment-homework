@@ -50,22 +50,8 @@ openshift_master_identity_providers=[{'name': 'ldap', 'challenge': 'true', 'logi
 openshift_master_ldap_ca_file=/root/ipa-ca.crt
 
 
-
-
-#Persistent Storage for the internal Registry.
-#Using NFS which needs to be setup prior to the running of the inventory file.
-
-# configure a pv that mounts "support1.d3be.com:/exports/registry"
-openshift_hosted_registry_storage_kind=nfs
-openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
-openshift_hosted_registry_storage_host=support1.d3be.internal
-openshift_hosted_registry_storage_nfs_directory=/exports
-openshift_hosted_registry_storage_volume_name=registry
-openshift_hosted_registry_storage_volume_size=10Gi
-
-
 # Enable cluster logging
-# openshift_logging_install_logging=True
+openshift_logging_install_logging=True
 #
 openshift_logging_storage_kind=nfs
 openshift_logging_storage_access_modes=['ReadWriteOnce']
@@ -126,6 +112,68 @@ openshift_hosted_etcd_storage_labels={'storage': 'etcd-asb'}
 openshift_hosted_etcd_storage_volume_name=etcd-asb
 openshift_hosted_etcd_storage_access_modes=['ReadWriteOnce']
 openshift_hosted_etcd_storage_volume_size=10G
+
+
+
+###########################################################################
+#### OpenShift Metrics and Logging Vars
+############################################################################
+
+#Enable cluster metrics
+openshift_metrics_install_metrics=True
+
+openshift_metrics_storage_kind=nfs
+openshift_metrics_storage_access_modes=['ReadWriteOnce']
+openshift_metrics_storage_nfs_directory=/srv/nfs
+openshift_metrics_storage_nfs_options='*(rw,root_squash)'
+openshift_metrics_storage_volume_name=metrics
+openshift_metrics_storage_volume_size=10Gi
+openshift_metrics_storage_labels={'storage': 'metrics'}
+
+openshift_metrics_cassandra_nodeselector={"env":"infra"}
+openshift_metrics_hawkular_nodeselector={"env":"infra"}
+openshift_metrics_heapster_nodeselector={"env":"infra"}
+
+#Add Prometheus Metrics:
+openshift_hosted_prometheus_deploy=true
+openshift_prometheus_node_selector={"env":"infra"}
+openshift_prometheus_namespace=openshift-metrics
+
+#Prometheus
+openshift_prometheus_storage_kind=nfs
+openshift_prometheus_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_storage_nfs_directory=/srv/nfs
+openshift_prometheus_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_storage_volume_name=prometheus
+openshift_prometheus_storage_volume_size=10Gi
+openshift_prometheus_storage_labels={'storage': 'prometheus'}
+openshift_prometheus_storage_type='pvc'
+#For prometheus-alertmanager
+openshift_prometheus_alertmanager_storage_kind=nfs
+openshift_prometheus_alertmanager_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_alertmanager_storage_nfs_directory=/srv/nfs
+openshift_prometheus_alertmanager_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_alertmanager_storage_volume_name=prometheus-alertmanager
+openshift_prometheus_alertmanager_storage_volume_size=10Gi
+openshift_prometheus_alertmanager_storage_labels={'storage': 'prometheus-alertmanager'}
+openshift_prometheus_alertmanager_storage_type='pvc'
+#For prometheus-alertbuffer
+openshift_prometheus_alertbuffer_storage_kind=nfs
+openshift_prometheus_alertbuffer_storage_access_modes=['ReadWriteOnce']
+openshift_prometheus_alertbuffer_storage_nfs_directory=/srv/nfs
+openshift_prometheus_alertbuffer_storage_nfs_options='*(rw,root_squash)'
+openshift_prometheus_alertbuffer_storage_volume_name=prometheus-alertbuffer
+openshift_prometheus_alertbuffer_storage_volume_size=10Gi
+openshift_prometheus_alertbuffer_storage_labels={'storage': 'prometheus-alertbuffer'}
+openshift_prometheus_alertbuffer_storage_type='pvc'
+
+#Already set in the disconnected section
+openshift_prometheus_node_exporter_image_version=v3.9
+
+#Enable cluster logging
+openshift_logging_install_logging=True
+
+
 
 
 
