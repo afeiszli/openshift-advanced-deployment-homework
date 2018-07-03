@@ -6,7 +6,7 @@ ansible_user=ec2-user
 
 # OpenShift Basic Variables
 openshift_deployment_type=openshift-enterprise
-openshift_release=v3.7
+#openshift_release=v3.9
 containerized=false
 openshift_disable_check="memory_availability"
 
@@ -36,10 +36,10 @@ openshift_master_console_port=443
 #HA Load Balancing using the internal HA Proxy
 openshift_master_cluster_method=native
 #DNS Variables
-#openshift_master_cluster_public_hostname=loadbalancer1.${GUID}.${DOMAIN}
-openshift_master_cluster_public_hostname=loadbalancer1.d3be.oslab.opentlc.com
-openshift_master_cluster_hostname=loadbalancer1.d3be.com
-openshift_master_default_subdomain=apps.d3be.oslab.opentlc.com
+#openshift_master_cluster_public_hostname=loadbalancer.${GUID}.${DOMAIN}
+openshift_master_cluster_public_hostname=loadbalancer.d3be.example.opentlc.com
+openshift_master_cluster_hostname=loadbalancer1.d3be.internal
+openshift_master_default_subdomain=apps.d3be.example.opentlc.com
 openshift_master_overwrite_named_certificates=True
 # Needed to enable nfs support
 openshift_enable_unsupported_configurations=True
