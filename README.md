@@ -3,7 +3,7 @@
 
 
 # OpenShift Advanced Deployment Homework
-This is the repository to store all of the artifacts required for the Open Shift Advanced Deployment Homework Assignment.  Upon completion, this repository will contain everything required todo the following.
+This is the repository to store all of the artifacts required for the Open Shift Advanced Deployment Homework Assignment.  Upon completion, this repository will contain everything required to do the following.
 
 * Setup and label the nodes.
 * Configure logging and metrics.
@@ -21,13 +21,13 @@ This is the repository to store all of the artifacts required for the Open Shift
 * Provide documentation around all of the above.
 
 # Installation instructions
-1. `$ ssh -i ~/.ssh/your_private_key_name *<OPENTLC Username>*@bastion.*<GUID>*.example.opentlc.com`
+1. `$ ssh -i ~/.ssh/your_private_key_name <OPENTLC Username>@bastion.<GUID>.example.opentlc.com`
 2. `git clone https://github.com/rallour/openshift-advanced-deployment-homework.git`
 3. `cd openshift-advanced-deployment-homework`
-4. `sh scripts/installer.sh -g *<GUID>*`
+4. `sh scripts/installer.sh -g <GUID>`
 5. Get comfortable.  The entire installation will take approximately 45 minutes to complete.
 
 # Disclaimer
-This repository and all of the artifacts inside of it are the result of the classes I just attended. All items in this repository are **NOT** officially (or unoficially) produced by Red Hat in any manner.  Almost all of this content is based upon other people's work, the documentation, or notes taken during the class.  All mistakes, errors and ommisions are my own.  I strongly urge you not to use the contents of this repository for anything you care about in the slightest.  There are bound to be mistakes of one kind or another, and your entire cluster may burst into flames if you use the inventory, templates, or any playbooks contained in this repository.  You have been warned.
+This repository and all of the artifacts inside of it are the result of the classes I just attended. All items in this repository are **NOT** officially (or unofficially) produced by Red Hat in any manner.  Almost all of this content is based upon other people's work, the documentation, or notes taken during the class.  All mistakes, errors and ommisions are my own.  I strongly urge you not to use the contents of this repository for anything you care about in the slightest.  There are bound to be mistakes of one kind or another, and your entire cluster may burst into flames if you use the inventory, templates, or any playbooks contained in this repository.  You have been warned.
 
 
