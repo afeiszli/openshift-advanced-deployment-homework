@@ -14,14 +14,17 @@ echo "GUID idenfied as $GUID"
 export GUID=$GUID
 echo "export GUID=$GUID" >> $HOME/.bashrc
 echo "Setting the GUID environment variable in the .bashrc on each of the hosts"
-ansible all -m shell -a 'export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc'
+#ansible all -m shell -a 'export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc'
 
 #Ensure that atomic-openshift-utils and atomic-openshift-clients are installed
-yum -y install atomic-openshift-utils atomic-openshift-clients
+#yum -y install atomic-openshift-utils atomic-openshift-clients
 
 #Download the CA certificate from the shared ldap server. Will need it for the installation of the cluster.
-wget http://ipa.shared.example.opentlc.com/ipa/config/ca.crt -O /root/ipa-ca.crt
+#wget http://ipa.shared.example.opentlc.com/ipa/config/ca.crt -O /root/ipa-ca.crt
 
+#Ask yum to update all packages on the server.
+echo "Yum update all packages to their latest version"
+ansible-playbook -i inventory/hosts files/ansible_yum_update.yml
 
 #Kick off the ansible-playbook that will check the pre-requisites
 echo "Executing ansible-playbook prerequisites.yml"
@@ -31,6 +34,9 @@ ansible-playbook -f 20 /usr/share/ansible/openshift-ansible/playbooks/prerequisi
 echo "Executing ansible-playbook deploy_cluster.yml"
 echo "This will take 30+ minutes. Go get some coffee"
 ansible-playbook -f 20 /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+
+#Copy the .kube directory to the bastion host
+ansible masters[0] -b -m fetch -a "src=/root/.kube/config dest=/root/.kube/config flat=yes"
 
 #Create the PVs on support1 for use with nfs
 echo "Creating nfs exports on support1"
@@ -43,7 +49,11 @@ echo "Creating PVs on bastion host"
 sh ./create_bastion_pvs.sh
 
 
-#Fix NFS Persisten Volume Recycling
+#Fix NFS Persistent Volume Recycling
 echo "Installing ose-recycler image on all of the nodes"
 ansible nodes -m shell -a "docker pull registry.access.redhat.com/openshift3/ose-recycler:latest"
 ansible nodes -m shell -a "docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.27"
+
+#Change the network type from subnet to multitenant
+#echo "Changing the network from subnet to multitenant"
+#ansible-playbook -i /etc/ansible/hosts file/ansible_change_network_policy.yml
