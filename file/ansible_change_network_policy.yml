@@ -1,19 +1,27 @@
 ---
+- hosts: localhost
+  tasks:
+    - name: change property os_sdn_network_plugin_name from openshift-ovs-subnet to openshift-ovs-multitenant in inventory 
+      lineinfile:
+        path: /etc/ansible/hosts
+        regexp: 'network-policy: redhat/openshift-ovs-subnet'
+        line: 'network-polciy: redhat/openshift-ovs-multitenant'
+
 - hosts: masters
   tasks:
     - name: change openshift-ovs-subnet to openshift-ovs-multitenant for masters
       lineinfile:
-      path: /etc/origin/master/master-config.yaml
-      regexp: 'redhat\/openshift-ovs-subnet'
-      line: 'redhat\/openshift-ovs-multitenant'
+        path: /etc/origin/master/master-config.yaml
+        regexp: 'network-policy: redhat/openshift-ovs-subnet'
+        line: 'network-polciy: redhat/openshift-ovs-multitenant'
 
 - hosts: nodes
   tasks:
     - name: change openshift-ovs-subnet to openshift-ovs-multitenant for nodes
       lineinfile:
-      path: /etc/origin/node/node-config.yaml
-      regexp: 'redhat\/openshift-ovs-subnet'
-      line: 'redhat\/openshift-ovs-multitenant'
+        path: /etc/origin/node/node-config.yaml
+        regexp: 'network-policy: redhat/openshift-ovs-subnet'
+        line: 'network-polciy: redhat/openshift-ovs-multitenant'
 
 - hosts: masters
   tasks:
@@ -34,7 +42,7 @@
         name: atomic-openshift-node
     - name: restart openvswitch
       systemd:
-        state: restart
+        state: restarted
         name: openvswitch
 
 - hosts: masters
