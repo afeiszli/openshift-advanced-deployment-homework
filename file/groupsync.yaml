@@ -1,0 +1,22 @@
+kind: LDAPSyncConfig
+apiVersion: v1
+url: "ldap://ipa.shared.example.opentlc.com"
+insecure: false
+ca: "/etc/origin/master/ipa-ca.crt"
+bindDN: "uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com"
+bindPassword: "r3dh4t1!"
+rfc2307:
+    groupsQuery:
+        baseDN: "cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com"
+        scope: sub
+        derefAliases: never
+        filter: (&(!(objectClass=mepManagedEntry))(!(cn=trust admins))(!(cn=groups))(!(cn=admins))(!(cn=ipausers))(!(cn=editors))(!(cn=ocp-users))(!(cn=evmgroup*))(!(cn=ipac*)))
+    groupUIDAttribute: dn
+    groupNameAttributes: [ cn ]
+    groupMembershipAttributes: [ member ]
+    usersQuery:
+        baseDN: "cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com"
+        scope: sub
+        derefAliases: never
+    userUIDAttribute: dn
+    userNameAttributes: [ uid ]

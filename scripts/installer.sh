@@ -31,3 +31,19 @@ ansible-playbook -f 20 /usr/share/ansible/openshift-ansible/playbooks/prerequisi
 echo "Executing ansible-playbook deploy_cluster.yml"
 echo "This will take 30+ minutes. Go get some coffee"
 ansible-playbook -f 20 /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+
+#Create the PVs on support1 for use with nfs
+echo "Creating nfs exports on support1"
+ansible nfs -b -m copy -a "src=/root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh dest=/root/create_support_pvs.sh"
+ansible nfs -m shell -a "sh /root/create_support_pvs.sh"
+
+
+#Create PVs on bastion host. A set of 5G and a set of 10G
+echo "Creating PVs on bastion host"
+sh ./create_bastion_pvs.sh
+
+
+#Fix NFS Persisten Volume Recycling
+echo "Installing ose-recycler image on all of the nodes"
+ansible nodes -m shell -a "docker pull registry.access.redhat.com/openshift3/ose-recycler:latest"
+ansible nodes -m shell -a "docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.27"
