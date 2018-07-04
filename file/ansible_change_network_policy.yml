@@ -1,0 +1,56 @@
+---
+- hosts: masters
+  tasks:
+    - name: change openshift-ovs-subnet to openshift-ovs-multitenant for masters
+      lineinfile:
+      path: /etc/origin/master/master-config.yaml
+      regexp: 'redhat\/openshift-ovs-subnet'
+      line: 'redhat\/openshift-ovs-multitenant'
+
+- hosts: nodes
+  tasks:
+    - name: change openshift-ovs-subnet to openshift-ovs-multitenant for nodes
+      lineinfile:
+      path: /etc/origin/node/node-config.yaml
+      regexp: 'redhat\/openshift-ovs-subnet'
+      line: 'redhat\/openshift-ovs-multitenant'
+
+- hosts: masters
+  tasks:
+    - name: stop atomic-openshift-master-api
+      systemd:
+        state: stopped
+        name: atomic-openshift-master-api
+    - name: stop atomic-openshift-master-controllers
+      systemd:
+        state: stopped
+        name: atomic-openshift-master-controllers
+
+- hosts: nodes
+  tasks:
+    - name: stop atomic-openshift-node
+      systemd:
+        state: stopped
+        name: atomic-openshift-node
+    - name: restart openvswitch
+      systemd:
+        state: restart
+        name: openvswitch
+
+- hosts: masters
+  tasks:
+    - name: start atomic-openshift-master-api
+      systemd:
+        state: started
+        name: atomic-openshift-master-api
+    - name: start atomic-openshift-master-controllers
+      systemd:
+        state: started
+        name: atomic-openshift-master-controllers
+
+- hosts: nodes
+  tasks:
+    - name: start atomic-openshift-node
+      systemd:
+        state: started
+        name: atomic-openshift-node
