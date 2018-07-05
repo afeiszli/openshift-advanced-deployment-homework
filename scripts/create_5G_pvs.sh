@@ -4,7 +4,7 @@ export GUID=`hostname|awk -F. '{print $2}'`
 
 export volsize="5Gi"
 mkdir /root/pvs
-for volume in pv{1..25} ; do
+for volume in pv{0..14} ; do
 cat << EOF > /root/pvs/${volume}
 {
   "apiVersion": "v1",
