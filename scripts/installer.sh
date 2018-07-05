@@ -60,4 +60,4 @@ ansible nodes -m shell -a "docker tag registry.access.redhat.com/openshift3/ose-
 
 
 #Create the PVs on the support host, and then create PVs on bastion.
-ansible-playbook -i /etc/ansible/hosts /root/openshift_advanced_deployment_homework/file/ansible_create_pvs.yml
+ansible-playbook -i /etc/ansible/hosts /root/openshift-advanced-deployment-homework/file/ansible_create_pvs.yml
