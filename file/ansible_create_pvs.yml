@@ -1,19 +1,20 @@
 ---
-- hosts: support1
+- hosts: nfs
   tasks:
     - name: copy create PVs script from bastion to support
       copy:
-        path: /root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh
-        dest: /root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh
+        path: /root/create_support_pvs.sh
+        dest: /root/create_support_pvs.sh
         remote_src: no
-        line: 'network-polciy: redhat/openshift-ovs-multitenant'
 
-- hosts: support1
+
+- hosts: nfs
   tasks:
     - name: create support PVs
-      command: /root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh
+      command: /root/create_support_pvs.sh
       args:
-        chdir: /root/openshift-advanced-deployment-homework/scripts/
+        chdir: /root/
+        create: /etc/exports.d/openshift-uservols.exports
 
 - hosts: localhost
   tasks:
@@ -21,3 +22,4 @@
       command: /root/openshift-advanced-deployment-homework/scripts/create_bastion_pvs.sh
       args:
         chdir: /root/openshift-advanced-deployment-homework/scripts/
+        create: /root/pvs
