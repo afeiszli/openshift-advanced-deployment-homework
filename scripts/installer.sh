@@ -57,3 +57,7 @@ ansible nodes -m shell -a "docker tag registry.access.redhat.com/openshift3/ose-
 #Change the network type from subnet to multitenant
 #echo "Changing the network from subnet to multitenant"
 #ansible-playbook -i /etc/ansible/hosts file/ansible_change_network_policy.yml
+
+
+#Create the PVs on the support host, and then create PVs on bastion.
+ansible-playbook -i /etc/ansible/hosts /root/openshift_advanced_deployment_homework/file/ansible_create_pvs.yml
