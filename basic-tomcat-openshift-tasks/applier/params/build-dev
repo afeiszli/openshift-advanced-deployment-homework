@@ -1,0 +1,4 @@
+APPLICATION_NAME=openshift-tasks
+NAMESPACE=openshift-tasks-build
+SOURCE_REPOSITORY_URL=https://github.com/OpenShiftDemos/openshift-tasks.git
+SOURCE_REPOSITORY_REF=master

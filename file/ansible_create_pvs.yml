@@ -21,4 +21,4 @@
       command: /root/openshift-advanced-deployment-homework/scripts/create_bastion_pvs.sh
       args:
         chdir: /root/openshift-advanced-deployment-homework/scripts/
-        creates: /root/pvs
+        creates: /root/pvs/
