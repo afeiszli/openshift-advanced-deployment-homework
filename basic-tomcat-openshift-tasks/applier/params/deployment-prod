@@ -1,5 +1,0 @@
-APPLICATION_NAME=basic-openshift-tasks
-NAMESPACE=basic-openshift-tasks-build
-SA_NAMESPACE=basic-openshift-tasks-build
-READINESS_RESPONSE=status.:.UP
-READINESS_PATH=/health
