@@ -131,7 +131,6 @@ openshift_logging_storage_labels={'storage': 'logging'}
 
 # openshift_logging_kibana_hostname=kibana.apps.$GUID.example.opentlc.com
 openshift_logging_es_cluster_size=1
-openshift_logging_es_number_of_replicas=1
 
 openshift_logging_es_nodeselector={"env":"infra"}
 openshift_logging_kibana_nodeselector={"env":"infra"}
