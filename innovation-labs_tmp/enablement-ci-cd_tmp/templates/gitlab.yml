@@ -435,6 +435,7 @@ objects:
     to:
       kind: Service
       name: "${APPLICATION_NAME}"
+      weight: 100
     port:
       targetPort: 443-https
     tls:
