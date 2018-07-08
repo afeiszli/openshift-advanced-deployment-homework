@@ -9,3 +9,4 @@ GITLAB_DATA_VOL_SIZE=2Gi
 POSTGRESQL_VOL_SIZE=1Gi
 APPLICATION_HOSTNAME=gitlab-jason-ci-cd.apps.ae9d.example.opentlc.com
 NAMESPACE=jason-ci-cd
+APPLICATION_NAME=gitlab-jason-ci-cd
