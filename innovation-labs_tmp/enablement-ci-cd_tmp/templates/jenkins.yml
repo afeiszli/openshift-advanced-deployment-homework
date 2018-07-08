@@ -138,8 +138,8 @@ objects:
       serviceaccounts.openshift.io/oauth-redirectreference.jenkins: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"${JENKINS_SERVICE_NAME}"}}'
     name: ${JENKINS_SERVICE_NAME}
 - apiVersion: v1
-  groupNames: null
   kind: RoleBinding
+  groupNames: null
   metadata:
     name: ${JENKINS_SERVICE_NAME}_edit
   roleRef:
