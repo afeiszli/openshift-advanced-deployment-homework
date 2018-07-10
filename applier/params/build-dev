@@ -1,4 +1,0 @@
-APPLICATION_NAME=ocp-openshift-tasks
-NAMESPACE=openshift-tasks
-SOURCE_REPOSITORY_URL=https://github.com/rallour/openshift-tasks
-SOURCE_REPOSITORY_REF=master

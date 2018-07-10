@@ -1,0 +1,11 @@
+LDAP_BIND_DN=uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com
+LDAP_USER_FILTER=(memberof=CN=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)
+LDAP_PASSWORD=r3dh4t1!
+LDAP_HOST=ldaps://ipa.shared.example.opentlc.com
+LDAP_BASE=cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com
+LDAP_LABEL="Shared OPENTLC LDAP Server"
+GITLAB_ROOT_PASSWORD=r3dh4t1!
+GITLAB_DATA_VOL_SIZE=2Gi
+POSTGRESQL_VOL_SIZE=1Gi
+APPLICATION_HOSTNAME=gitlab-jason-ci-cd.apps.ae9d.example.opentlc.com
+NAMESPACE=jason-ci-cd

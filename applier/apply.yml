@@ -2,6 +2,8 @@
 - name: Deploy {{ target }}
   hosts: "{{ target }}"
   vars:
+    GUID: { GUID }
+    nexus_namespace: $GUID-nexus 
   tasks:
     - include_role:
         name: openshift-applier/roles/openshift-applier

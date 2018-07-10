@@ -4,24 +4,5 @@ items:
 - kind: ProjectRequest
   apiVersion: v1
   metadata:
-    name: ocp-openshift-tasks-build
-    creationTimestam: null
-  displayName: OpenShift Tasks App- Build
-- kind: ProjectRequest
-  apiVersion: v1
-  metadata:
-    name: ocp-openshift-tasks-dev
-    creationTimestam: null
-  displayName: OpenShift Tasks App- Dev
-- kind: ProjectRequest
-  apiVersion: v1
-  metadata:
-    name: ocp-openshift-tasks-stage
-    creationTimestam: null
-  displayName: OpenShift Tasks App- Stage
-- kind: ProjectRequest
-  apiVersion: v1
-  metadata:
-    name: ocp-openshift-tasks-prod
-    creationTimestam: null
-  displayName: OpenShift Tasks App- Prod
+    name: {{ GUID }}-nexus
+  displayName: OpenShift Nexus

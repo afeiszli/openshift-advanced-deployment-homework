@@ -1,0 +1,11 @@
+---
+ansible_connection: local
+openshift_cluster_content:
+- object: nexus
+  content:
+  - name: "nexus"
+    namespace: "{{ nexus_namespace }}"
+    template: "{{ playbook_dir }}/templates/nexus.yml"
+    params: "{{ playbook_dir }}/params/nexus"
+    tags:
+    - nexus
