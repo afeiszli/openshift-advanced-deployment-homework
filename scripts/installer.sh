@@ -61,3 +61,11 @@ ansible nodes -m shell -a "docker tag registry.access.redhat.com/openshift3/ose-
 
 #Create the PVs on the support host, and then create PVs on bastion.
 ansible-playbook -i /etc/ansible/hosts /root/openshift-advanced-deployment-homework/file/ansible_create_pvs.yml
+
+
+#Create user groups, and add the users to each group.
+oc adm groups new alpha amy andrew
+oc adm groups new beta brian betty
+oc label group/alpha client=alpha
+oc label group/beta client=beta
+

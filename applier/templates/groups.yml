@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: ocp_groups.yml
+objects:
+- apiVersion: v1
+  kind: Group
+  metadata:
+    creationTimestamp: null
+    labels:
+      client: alpha
+    name: alpha
+  users:
+  - amy
+  - andrew
+- apiVersion: v1
+  kind: Group
+  metadata:
+    creationTimestamp: null
+    labels:
+      client: beta
+    name: beta
+  users:
+  - brian
+  - betty
+- apiVersion: v1
+  kind: Group
+  metadata:
+    annotations:
+      openshift.io/ldap.sync-time: 2018-07-05T14:42:16Z
+      openshift.io/ldap.uid: cn=ocp-platform,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com
+      openshift.io/ldap.url: ipa.shared.example.opentlc.com:389
+    creationTimestamp: null
+    labels:
+      openshift.io/ldap.host: ipa.shared.example.opentlc.com
+    name: ocp-platform
+  users:
+  - david
+  - admin1
+  - admin2
+  - luochen
+  - loren
+  - chenzhen
+- apiVersion: v1
+  kind: Group
+  metadata:
+    annotations:
+      openshift.io/ldap.sync-time: 2018-07-05T14:42:21Z
+      openshift.io/ldap.uid: cn=ocp-production,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com
+      openshift.io/ldap.url: ipa.shared.example.opentlc.com:389
+    creationTimestamp: null
+    labels:
+      openshift.io/ldap.host: ipa.shared.example.opentlc.com
+    name: ocp-production
+  users:
+  - karla
+  - prod1
+  - prod2
+  - luochen
+  - loren
+  - chenzhen
+- apiVersion: v1
+  kind: Group
+  metadata:
+    annotations:
+      openshift.io/ldap.sync-time: 2018-07-05T14:42:09Z
+      openshift.io/ldap.uid: cn=paymentapp,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com
+      openshift.io/ldap.url: ipa.shared.example.opentlc.com:389
+    creationTimestamp: null
+    labels:
+      openshift.io/ldap.host: ipa.shared.example.opentlc.com
+    name: paymentapp
+  users:
+  - marina
+  - payment1
+  - payment2
+  - chenzhen
+- apiVersion: v1
+  kind: Group
+  metadata:
+    annotations:
+      openshift.io/ldap.sync-time: 2018-07-05T14:42:04Z
+      openshift.io/ldap.uid: cn=portalapp,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com
+      openshift.io/ldap.url: ipa.shared.example.opentlc.com:389
+    creationTimestamp: null
+    labels:
+      openshift.io/ldap.host: ipa.shared.example.opentlc.com
+    name: portalapp
+  users:
+  - andrew
+  - portal1
+  - portal2
+  - chenzhen
