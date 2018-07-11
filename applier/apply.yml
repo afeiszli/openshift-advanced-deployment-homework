@@ -3,7 +3,9 @@
   hosts: "{{ target }}"
   vars:
     GUID: { GUID }
-    nexus_namespace: $GUID-nexus 
+    nexus_namespace: $GUID-nexus
+    sonarqube_namespace: $GUID-sonarqube
+    gogs_namespace: $GUID-gogs
   tasks:
     - include_role:
         name: openshift-applier/roles/openshift-applier

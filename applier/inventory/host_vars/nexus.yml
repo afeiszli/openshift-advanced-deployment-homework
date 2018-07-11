@@ -8,4 +8,4 @@ openshift_cluster_content:
     template: "{{ playbook_dir }}/templates/nexus.yml"
     params: "{{ playbook_dir }}/params/nexus"
     tags:
-    - nexus
+    - nexus      
