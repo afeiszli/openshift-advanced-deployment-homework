@@ -118,49 +118,6 @@ ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-sonarqub
 
 
 
-################################################################################
-############################ GOGS ##############################################
-################################################################################
-
-#Create a project for GOGS to store the openshift-tasks source code repository.
-oc new-project gogs --display-name "Gogs"
-#Deploy postgresql-persistent for use with GOGS
-#Give it a labe of postgresql_gogs
-#Set the username and password to gogs/gogs
-oc new-app postgresql-persistent --param POSTGRESQL_DATABASE=gogs --param POSTGRESQL_USER=gogs --param POSTGRESQL_PASSWORD=gogs --param VOLUME_CAPACITY=4Gi -lapp=postgresql_gogs
-
-#Deploy GOGS server
-#This docker image may not exist, if not then need to find it and import it to
-# the local docker registry prior oc new-app
-oc new-app wkulhanek/gogs:11.34 -lapp=gogs
-
-#Create GOGS PVC
-oc process -f applier/templates/gogs_pvc.yml -l app=gogs -n gogs | oc create -f -
-
-#Add the persistent storage and attach it to /data
-oc set volume dc/gogs --add --overwrite --name=gogs-volume-1 --mount-path=/data/ --type persistentVolumeClaim --claim-name=gogs-data
-
-#Expose the service and find the route
-oc expose svc gogs
-oc get route gogs
-
-#Retrieve the configuration from the Gogs pod and store it
-oc exec $(oc get pod | grep "^gogs" | awk '{print $1}') -- cat /opt/gogs/custom/conf/app.ini >$HOME/app.ini
-
-#Create a configmap from the stored configuration
-oc create configmap gogs --from-file=$HOME/app.ini
-
-#Update the Gogs DC and mount the config map as a volume under /opt/gogs/custom/conf
-oc set volume dc/gogs --add --overwrite --name=config-volume -m /opt/gogs/custom/conf/ -t configmap --configmap-name=gogs
-
-#Add the openshift-tasks project to Gogs
-cd $HOME
-git clone https://github.com/rallour/openshift-tasks.git
-cd $HOME/openshift-tasks
-git remote add gogs http://gogsadmin:gogspassword@$(oc get route gogs -n gogs --template='{{ .spec.host }}')/CICDLabs/openshift-tasks.git
-git push -u gogs master
-
-
 
 ################################################################################
 ############################ JENKINS ###########################################

@@ -4,11 +4,8 @@ localhost ansible_connection=local
 [cicd-nexus]
 nexus
 
-[cicd-gogs]
-gogs
+[cicd-sonarqube]
+sonarqube
 
 [cicd-jenkins]
 jenkins
-
-[cicd-sonarqube]
-sonarqube

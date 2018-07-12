@@ -15,9 +15,4 @@ openshift_cluster_content:
     params: "{{ playbook_dir }}/params/jenkins"
     tags:
     - jenkins
-  - name: "gogs"
-    namespace: "{{ ci_cd_namespace }}"
-    template: "{{ playbook_dir }}/templates/gogs.yml"
-    params: "{{ playbook_dir }}/params/gogs"
-    tags:
-    - gogs
+  
