@@ -1,0 +1,12 @@
+---
+ansible_connection: local
+openshift_cluster_content:
+- object: cicd-template
+  content:
+  - name: "cicd-template"
+    namespace: "{{ jenkins_namespace }}"
+    template: "{{ playbook_dir }}/templates/cicd-template-openshift-tasks.yml"
+    params: "{{ playbook_dir }}/params/cicd-template"
+    tags:
+    - jenkins
+    - cicd-template

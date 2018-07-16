@@ -123,7 +123,13 @@ ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-sonarqub
 ############################ JENKINS ###########################################
 ################################################################################
 
-oc new-project jenkins --display-name "Jenkins"
+oc new-project ${GUID}-jenkins --display-name "Jenkins"
+ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-jenkins -e GUID=$GUID
+ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-template-jenkins -e GUID=$GUID
+
+
+oc adm pod-network join-projects --to=ae9d-jenkins ae9d-nexus ae9d-sonarqube
+
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi
 mkdir $HOME/jenkins-slave-appdev
 cd  $HOME/jenkins-slave-appdev

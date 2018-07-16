@@ -9,3 +9,6 @@ sonarqube
 
 [cicd-jenkins]
 jenkins
+
+[cicd-template-jenkins]
+cicd-template

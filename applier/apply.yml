@@ -6,6 +6,7 @@
     nexus_namespace: $GUID-nexus
     sonarqube_namespace: $GUID-sonarqube
     jenkins_namespace: $GUID-jenkins
+    CICD_NAMESPACE: $GUID-jenkins
   tasks:
     - include_role:
         name: openshift-applier/roles/openshift-applier

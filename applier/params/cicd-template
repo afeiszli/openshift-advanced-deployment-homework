@@ -1,0 +1,4 @@
+DEV_PROJECT=dev-openshift-tasks
+STAGE_PROJECT=stage-openshift-tasks
+WITH_CHE=false
+EPHEMERAL=true
