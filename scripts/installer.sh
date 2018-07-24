@@ -38,6 +38,10 @@ ansible-playbook -f 20 /usr/share/ansible/openshift-ansible/playbooks/deploy_clu
 #Copy the .kube directory to the bastion host
 ansible masters[0] -b -m fetch -a "src=/root/.kube/config dest=/root/.kube/config flat=yes"
 
+#Copy the .kube directory to my work installation (Only needed after environment rebuild)
+#cp -r ~/.kube/config /home/jasosmit*/
+#scp jasosmit-redhat.com@bastion.ae9d.example.opentlc.com:~/.kube/config ~/.kube/config
+
 #Create the PVs on support1 for use with nfs
 echo "Creating nfs exports on support1"
 ansible nfs -b -m copy -a "src=/root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh dest=/root/create_support_pvs.sh"
@@ -125,14 +129,16 @@ ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-sonarqub
 
 oc new-project ${GUID}-jenkins --display-name "Jenkins"
 ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-jenkins -e GUID=$GUID
+oc new-project project-openshift-tasks --display-name "Open Shift Tasks Project"
+oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n project-openshift-tasks
 ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-template-jenkins -e GUID=$GUID
+oc start-build bc/openshift-tasks-pipeline
+oc autoscale dc/tasks --min=1 --max=5 --cpu-percent=75 -n project-openshift-tasks
 
 
-oc adm pod-network join-projects --to=ae9d-jenkins ae9d-nexus ae9d-sonarqube
+#oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi
+#mkdir $HOME/jenkins-slave-appdev
+#cd  $HOME/jenkins-slave-appdev
 
-oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi
-mkdir $HOME/jenkins-slave-appdev
-cd  $HOME/jenkins-slave-appdev
-
-docker build . -t docker-registry-default.apps.${GUID}.example.opentlc.com/jenkins/jenkins-slave-maven-appdev:v3.9
-docker login -u admin1 -p $(oc whoami -t) docker-registry-default.apps.${GUID}.example.opentlc.com
+#docker build . -t docker-registry-default.apps.${GUID}.example.opentlc.com/jenkins/jenkins-slave-maven-appdev:v3.9
+#docker login -u admin1 -p $(oc whoami -t) docker-registry-default.apps.${GUID}.example.opentlc.com

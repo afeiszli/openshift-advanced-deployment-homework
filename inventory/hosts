@@ -38,6 +38,12 @@ openshift_examples_modify_imagestreams=true
 openshift_enable_unsupported_configurations=True
 
 
+# Build Selector default value.  If the node selector is null, then client=common
+# will be applied to force those pods to nodes 3 and 4.
+# Will need to set client=alpha, client=beta explicitly to use dedicated nodes
+openshift_builddefaults_nodeselectors={'client':'common'}
+
+
 ###########################################################################
 ### OpenShift Network Vars
 ###########################################################################
@@ -188,13 +194,13 @@ nodes
 nfs
 
 [lb]
-loadbalancer1.ae9d.internal 
+loadbalancer1.ae9d.internal
 
 [masters]
-master[1:3].ae9d.internal 
+master[1:3].ae9d.internal
 
 [etcd]
-master[1:3].ae9d.internal 
+master[1:3].ae9d.internal
 
 [nodes]
 ## These are the masters
@@ -207,11 +213,10 @@ infranode1.ae9d.internal openshift_hostname=infranode1.ae9d.internal openshift_n
 infranode2.ae9d.internal openshift_hostname=infranode2.ae9d.internal openshift_node_labels="{'env':'infra', 'cluster':'ae9d'}"
 
 ## These are regular nodes
-node1.ae9d.internal openshift_hostname=node1.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster':'ae9d'}"
-node2.ae9d.internal openshift_hostname=node2.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster':'ae9d'}"
-node3.ae9d.internal openshift_hostname=node3.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster':'ae9d'}"
-node4.ae9d.internal openshift_hostname=node4.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster':'ae9d'}"
+node1.ae9d.internal openshift_hostname=node1.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster':'ae9d', 'client':'alpha'}"
+node2.ae9d.internal openshift_hostname=node2.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster':'ae9d', 'client':'beta'}"
+node3.ae9d.internal openshift_hostname=node3.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster':'ae9d', 'client':'common'}"
+node4.ae9d.internal openshift_hostname=node4.ae9d.internal  openshift_node_labels="{'env':'app', 'cluster':'ae9d', 'client':'common'}"
 
 [nfs]
 support1.ae9d.internal openshift_hostname=support1.ae9d.internal
-

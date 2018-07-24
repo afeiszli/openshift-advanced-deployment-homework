@@ -75,7 +75,7 @@ objects:
       jenkinsPipelineStrategy:
         env:
         - name: STAGE_PROJECT
-          value: ${NAMEPSACE}
+          value: project-openshift-tasks
         jenkinsfile: |-
           def version, mvnCmd = "mvn "
 
@@ -128,7 +128,10 @@ objects:
                   }
                 }
               }
-              stage('Create DEV') {
+
+
+
+              stage('Create Open Shift Tasks Application in Project project-openshift-tasks') {
                 when {
                   expression {
                     openshift.withCluster() {

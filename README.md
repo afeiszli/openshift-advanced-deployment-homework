@@ -28,6 +28,4 @@ This is the repository to store all of the artifacts required for the Open Shift
 5. Get comfortable.  The entire installation will take approximately 45 minutes to complete.
 
 # Disclaimer
-This repository and all of the artifacts inside of it are the result of the classes I just attended. All items in this repository are **NOT** officially (or unofficially) produced by Red Hat in any manner.  Almost all of this content is based upon other people's work, the documentation, or notes taken during the class.  All mistakes, errors and ommisions are my own.  I strongly urge you not to use the contents of this repository for anything you care about in the slightest.  There are bound to be mistakes of one kind or another, and your entire cluster may burst into flames if you use the inventory, templates, or any playbooks contained in this repository.  You have been warned.
-
-
+This repository and all of the artifacts inside of it are the result of the classes I just attended. All items in this repository are **NOT** officially (or unofficially) produced by Red Hat in any manner.  Almost all of this content is based upon other people's work, the documentation, or notes taken during the class.  All mistakes, errors and omissions are my own.  I strongly urge you not to use the contents of this repository for anything you care about in the slightest.  There are bound to be mistakes of one kind or another, and your entire cluster may burst into flames if you use the inventory, templates, or any playbooks contained in this repository.  You have been warned.
