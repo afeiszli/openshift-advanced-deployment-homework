@@ -43,6 +43,10 @@ openshift_enable_unsupported_configurations=True
 # Will need to set client=alpha, client=beta explicitly to use dedicated nodes
 openshift_builddefaults_nodeselectors={'client':'common'}
 
+# Ensure that the oc new-project command uses the template stored in default/project-request
+# This updated template contains limits to be enforced by all projects.
+osm_project_request_template='default/project-request'
+
 
 ###########################################################################
 ### OpenShift Network Vars
@@ -110,7 +114,7 @@ openshift_hosted_etcd_storage_volume_size=10G
 ############################################################################
 
 #Enable cluster metrics
-openshift_metrics_install_metrics=True
+openshift_metrics_install_metrics=true
 
 openshift_metrics_storage_kind=nfs
 openshift_metrics_storage_access_modes=['ReadWriteOnce']

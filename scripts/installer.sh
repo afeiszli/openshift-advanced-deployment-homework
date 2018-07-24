@@ -17,14 +17,10 @@ echo "Setting the GUID environment variable in the .bashrc on each of the hosts"
 #ansible all -m shell -a 'export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc'
 
 #Ensure that atomic-openshift-utils and atomic-openshift-clients are installed
-#yum -y install atomic-openshift-utils atomic-openshift-clients
+yum -y install atomic-openshift-utils atomic-openshift-clients
 
 #Download the CA certificate from the shared ldap server. Will need it for the installation of the cluster.
-#wget http://ipa.shared.example.opentlc.com/ipa/config/ca.crt -O /root/ipa-ca.crt
-
-#Ask yum to update all packages on the server.
-echo "Yum update all packages to their latest version"
-ansible-playbook -i inventory/hosts files/ansible_yum_update.yml
+wget http://ipa.shared.example.opentlc.com/ipa/config/ca.crt -O /root/ipa-ca.crt
 
 #Kick off the ansible-playbook that will check the pre-requisites
 echo "Executing ansible-playbook prerequisites.yml"
@@ -67,11 +63,23 @@ ansible nodes -m shell -a "docker tag registry.access.redhat.com/openshift3/ose-
 ansible-playbook -i /etc/ansible/hosts /root/openshift-advanced-deployment-homework/file/ansible_create_pvs.yml
 
 
-#Create user groups, and add the users to each group.
+#Update the default project template to have limits
+oc create -f applier/templates/default_project_template.yaml -n default
+
+#Remove the ability for users to provision their own projects.
+oc patch clusterrolebinding.rbac self-provisioners -p '{"subjects": null}'
+
+#Create customer user groups, and add the users to each group.
 oc adm groups new alpha amy andrew
 oc adm groups new beta brian betty
 oc label group/alpha client=alpha
 oc label group/beta client=beta
+oc adm new-project alpha-project --node-selector='client=alpha'
+oc adm new-project beta-project --node-selector='client=beta'
+oc adm policy add-role-to-group admin alpha -n alpha-project
+oc adm policy add-role-to-group admin beta -n beta-project
+
+
 
 # Login as user admin1
 oc login -u admin1 -p r3dh4t1!
