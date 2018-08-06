@@ -1,3 +1,0 @@
-[submodule "openshift-applier"]
-	path = openshift-applier
-	url = https://github.com/rallour/openshift-applier.git

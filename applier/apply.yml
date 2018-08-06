@@ -2,12 +2,6 @@
 - name: Deploy {{ target }}
   hosts: "{{ target }}"
   vars:
-    USERNAME:
-      "{{ username }}"
-    FULLNAME:
-      "{{ fullName }}"
-    CUSTOMER:
-      "{{ customer }}"
     GUID: { GUID }
     jenkins_namespace: $GUID-jenkins
     CICD_NAMESPACE: $GUID-jenkins

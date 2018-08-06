@@ -18,6 +18,3 @@ create-client-groups
 
 [ocp-homework]
 ocp_homework
-
-[create-user]
-new_user
