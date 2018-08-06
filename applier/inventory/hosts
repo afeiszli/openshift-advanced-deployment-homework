@@ -12,3 +12,12 @@ jenkins
 
 [cicd-template-jenkins]
 cicd-template
+
+[create-client-groups]
+create-client-groups
+
+[ocp-homework]
+ocp_homework
+
+[create-user]
+new_user

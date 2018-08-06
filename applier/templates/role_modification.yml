@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: 2018-07-24T17:50:37Z
+  name: self-provisioner
+  resourceVersion: "123026"
+  selfLink: /apis/rbac.authorization.k8s.io/v1/clusterrolebindings/self-provisioner
+  uid: 128bcd7e-8f6a-11e8-8651-16edc8611940
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: self-provisioner
+subjects: null

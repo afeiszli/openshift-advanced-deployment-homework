@@ -2,9 +2,13 @@
 - name: Deploy {{ target }}
   hosts: "{{ target }}"
   vars:
+    USERNAME:
+      "{{ username }}"
+    FULLNAME:
+      "{{ fullName }}"
+    CUSTOMER:
+      "{{ customer }}"
     GUID: { GUID }
-    nexus_namespace: $GUID-nexus
-    sonarqube_namespace: $GUID-sonarqube
     jenkins_namespace: $GUID-jenkins
     CICD_NAMESPACE: $GUID-jenkins
   tasks:

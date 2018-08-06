@@ -5,8 +5,10 @@
 # Based upon the steps in lab 02 - HA Deployment Lab from the OCP Advanced Deployment Class
 # Script Author: Jason Smith
 # Author Email: jasosmit@redhat.com
-# Date: 03JUL18 08:30
+# Date: 24JUL18 12:29
 
+echo "Copy inventory file to the correct place"
+cp inventory/hosts /etc/ansible/hosts
 
 # Prepare the environment with the GUID for this installation.
 GUID=`hostname | cut -d"." -f2`
@@ -39,14 +41,9 @@ ansible masters[0] -b -m fetch -a "src=/root/.kube/config dest=/root/.kube/confi
 #scp jasosmit-redhat.com@bastion.ae9d.example.opentlc.com:~/.kube/config ~/.kube/config
 
 #Create the PVs on support1 for use with nfs
-echo "Creating nfs exports on support1"
-ansible nfs -b -m copy -a "src=/root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh dest=/root/create_support_pvs.sh"
-ansible nfs -m shell -a "sh /root/create_support_pvs.sh"
-
-
-#Create PVs on bastion host. A set of 5G and a set of 10G
-echo "Creating PVs on bastion host"
-sh ./create_bastion_pvs.sh
+#echo "Creating nfs exports on support1"
+#ansible nfs -b -m copy -a "src=/root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh dest=/root/create_support_pvs.sh"
+#ansible nfs -m shell -a "sh /root/create_support_pvs.sh"
 
 
 #Fix NFS Persistent Volume Recycling
@@ -70,26 +67,24 @@ oc create -f applier/templates/default_project_template.yaml -n default
 oc patch clusterrolebinding.rbac self-provisioners -p '{"subjects": null}'
 
 #Create customer user groups, and add the users to each group.
-oc adm groups new alpha amy andrew
-oc adm groups new beta brian betty
-oc label group/alpha client=alpha
-oc label group/beta client=beta
-oc adm new-project alpha-project --node-selector='client=alpha'
-oc adm new-project beta-project --node-selector='client=beta'
+ansible-playbook applier/apply.yml -i applier/inventory/ -e target=ocp-homework
+
+#Make sure that alpha can create applications inside of alpha Namespace
+#and the same thing for beta client
 oc adm policy add-role-to-group admin alpha -n alpha-project
 oc adm policy add-role-to-group admin beta -n beta-project
 
 
 
 # Login as user admin1
-oc login -u admin1 -p r3dh4t1!
+# oc login -u admin1 -p r3dh4t1!
 
 ################################################################################
 ############################ NEXUS #############################################
 ################################################################################
 
 #Create a project for nexus
-oc new-project $GUID-nexus --display-name "Nexus"
+# oc new-project $GUID-nexus --display-name "Nexus"
 #oc new-app sonatype/nexus3:latest
 #oc expose svc nexus3
 #oc rollout pause dc nexus3
@@ -105,17 +100,17 @@ oc new-project $GUID-nexus --display-name "Nexus"
 #./setup_nexus3.sh admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}')
 #rm setup_nexus3.sh
 #oc expose dc nexus3 --port=5000 --name=nexus-registry
-oc create route edge nexus-registry --service=nexus-registry --port=5000
+# oc create route edge nexus-registry --service=nexus-registry --port=5000
 
 #### Ansible Applier Method ####
 ###  cd ocp-39-adv-deployment-homework directory ###
-ansible-playbook applier/apply.yml -i applier/inventory/ -e target=nexus -e GUID=ae9d
-curl -o setup_nexus3.sh -s https://raw.githubusercontent.com/wkulhanek/ocp_advanced_development_resources/master/nexus/setup_nexus3.sh
-chmod +x setup_nexus3.sh
-./setup_nexus3.sh admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}')
-rm setup_nexus3.sh
-oc expose dc nexus3 --port=5000 --name=nexus-registry
-oc create route edge nexus-registry --service=nexus-registry --port=5000
+# ansible-playbook applier/apply.yml -i applier/inventory/ -e target=nexus -e GUID=ae9d
+# curl -o setup_nexus3.sh -s https://raw.githubusercontent.com/wkulhanek/ocp_advanced_development_resources/master/nexus/setup_nexus3.sh
+# chmod +x setup_nexus3.sh
+# ./setup_nexus3.sh admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}')
+# rm setup_nexus3.sh
+# oc expose dc nexus3 --port=5000 --name=nexus-registry
+# oc create route edge nexus-registry --service=nexus-registry --port=5000
 
 
 ################################################################################
@@ -125,7 +120,7 @@ oc create route edge nexus-registry --service=nexus-registry --port=5000
 ### Will deploy both sonarqube and postgresql in the same namespace and hook them
 # together.
 
-ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-sonarqube -e GUID=ae9d
+#ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-sonarqube -e GUID=ae9d
 
 
 

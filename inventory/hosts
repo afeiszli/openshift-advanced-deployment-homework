@@ -46,7 +46,7 @@ openshift_builddefaults_nodeselectors={'client':'common'}
 # Ensure that the oc new-project command uses the template stored in default/project-request
 # This updated template contains limits to be enforced by all projects.
 osm_project_request_template='default/project-request'
-
+osm_project_request_message='Please contact the cluster administrator if you need a new project created.'
 
 ###########################################################################
 ### OpenShift Network Vars

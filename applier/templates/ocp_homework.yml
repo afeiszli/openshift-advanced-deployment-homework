@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: ocp-homework
+objects:
+- apiVersion: v1
+  kind: Group
+  metadata:
+    labels:
+      client: alpha
+    name: alpha
+  users:
+  - amy
+  - andrew
+- apiVersion: v1
+  kind: Group
+  metadata:
+    labels:
+      client: beta
+    name: beta
+  users:
+  - brian
+  - betty
+- apiVersion: v1
+  kind: Group
+  metadata:
+    labels:
+      client: common
+    name: common
+- apiVersion: v1
+  kind: Project
+  metadata:
+    annotations:
+      openshift.io/description: "Namespace for Client Alpha"
+      openshift.io/display-name: "Alpha Project"
+      openshift.io/node-selector: client=alpha
+    name: alpha-project
+  spec:
+    finalizers:
+    - openshift.io/origin
+    - kubernetes
+  status:
+    phase: Active
+- apiVersion: v1
+  kind: Project
+  metadata:
+    annotations:
+      openshift.io/description: "Namespace for Client Beta"
+      openshift.io/display-name: "Beta Project"
+      openshift.io/node-selector: client=beta
+    name: beta-project
+  spec:
+    finalizers:
+    - openshift.io/origin
+    - kubernetes
+  status:
+    phase: Active
+- apiVersion: v1
+  groupNames:
+  - alpha
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: admin-0
+  roleRef:
+    name: admin
+  subjects:
+  - kind: Group
+    name: alpha
+  userNames: null
