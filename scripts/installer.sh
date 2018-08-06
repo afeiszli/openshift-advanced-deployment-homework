@@ -5,7 +5,7 @@
 # Based upon the steps in lab 02 - HA Deployment Lab from the OCP Advanced Deployment Class
 # Script Author: Jason Smith
 # Author Email: jasosmit@redhat.com
-# Date: 24JUL18 12:29
+# Date: 06AUG18 18:10
 
 echo "Copy inventory file to the correct place"
 cp inventory/hosts /etc/ansible/hosts
@@ -14,9 +14,14 @@ cp inventory/hosts /etc/ansible/hosts
 GUID=`hostname | cut -d"." -f2`
 echo "GUID idenfied as $GUID"
 export GUID=$GUID
-echo "export GUID=$GUID" >> $HOME/.bashrc
-echo "Setting the GUID environment variable in the .bashrc on each of the hosts"
-#ansible all -m shell -a 'export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc'
+guid_cnt=`grep -c "GUID=$GUID" $HOME/.bashrc`
+if [[ $guid_cnt -ne 1 ]]; then
+  echo "export GUID=$GUID" >> $HOME/.bashrc
+  echo "Setting the GUID environment variable in the .bashrc on each of the hosts"
+  ansible all -m shell -a 'export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc'
+else
+  echo "GUID variable has already been set"
+fi
 
 #Ensure that atomic-openshift-utils and atomic-openshift-clients are installed
 yum -y install atomic-openshift-utils atomic-openshift-clients
@@ -41,19 +46,15 @@ ansible masters[0] -b -m fetch -a "src=/root/.kube/config dest=/root/.kube/confi
 #scp jasosmit-redhat.com@bastion.ae9d.example.opentlc.com:~/.kube/config ~/.kube/config
 
 #Create the PVs on support1 for use with nfs
-#echo "Creating nfs exports on support1"
-#ansible nfs -b -m copy -a "src=/root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh dest=/root/create_support_pvs.sh"
-#ansible nfs -m shell -a "sh /root/create_support_pvs.sh"
+echo "Creating nfs exports on support1"
+ansible nfs -b -m copy -a "src=/root/openshift-advanced-deployment-homework/scripts/create_support_pvs.sh dest=/root/create_support_pvs.sh"
+ansible nfs -m shell -a "sh /root/create_support_pvs.sh"
 
 
 #Fix NFS Persistent Volume Recycling
 echo "Installing ose-recycler image on all of the nodes"
 ansible nodes -m shell -a "docker pull registry.access.redhat.com/openshift3/ose-recycler:latest"
 ansible nodes -m shell -a "docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.27"
-
-#Change the network type from subnet to multitenant
-#echo "Changing the network from subnet to multitenant"
-#ansible-playbook -i /etc/ansible/hosts file/ansible_change_network_policy.yml
 
 
 #Create the PVs on the support host, and then create PVs on bastion.
@@ -129,7 +130,7 @@ oc adm policy add-role-to-group admin beta -n beta-project
 ################################################################################
 ############################ JENKINS ###########################################
 ################################################################################
-
+echo "Installing Jenkins, CICD pipeline, and application"
 oc new-project ${GUID}-jenkins --display-name "Jenkins"
 ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-jenkins -e GUID=$GUID
 oc new-project project-openshift-tasks --display-name "Open Shift Tasks Project"
@@ -138,6 +139,7 @@ ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-template
 oc start-build bc/openshift-tasks-pipeline
 oc autoscale dc/tasks --min=1 --max=5 --cpu-percent=75 -n project-openshift-tasks
 
+echo "Openshift Installation Complete."
 
 #oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi
 #mkdir $HOME/jenkins-slave-appdev
