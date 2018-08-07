@@ -139,7 +139,9 @@ ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-jenkins 
 oc new-project project-openshift-tasks --display-name "Open Shift Tasks Project"
 oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n project-openshift-tasks
 ansible-playbook applier/apply.yml -i applier/inventory/ -e target=cicd-template-jenkins -e GUID=$GUID
-oc start-build bc/openshift-tasks-pipeline
+oc project ${GUID}-jenkins
+#oc start-build bc/openshift-tasks-pipeline
+oc start-build bc/tasks-pipeline
 oc autoscale dc/tasks --min=1 --max=5 --cpu-percent=75 -n project-openshift-tasks
 
 echo "Openshift Installation Complete."
