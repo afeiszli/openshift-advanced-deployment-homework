@@ -8,30 +8,11 @@ metadata:
     iconClass: icon-jenkins
     tags: instant-app,jenkins,gogs,nexus,cicd
   name: cicd
-message: "Use the following credentials for login:\nJenkins: use your OpenShift credentials\nNexus: admin/admin123\nSonarQube: admin/admin\nGogs Git Server: gogs/gogs"
+message: "Use the following credentials for login:\nJenkins: use your OpenShift credentials\n"
 parameters:
-- displayName: DEV project name
-  value: dev
-  name: DEV_PROJECT
-  required: true
 - displayName: STAGE project name
   value: stage
   name: STAGE_PROJECT
-  required: true
-- displayName: Deploy Eclipse Che
-  description: Deploy Eclipse Che in order to use as an online IDE for changing code in this demo
-  value: "false"
-  name: WITH_CHE
-  required: true
-- displayName: Ephemeral
-  description: Use no persistent storage for Gogs and Nexus
-  value: "true"
-  name: EPHEMERAL
-  required: true
-- description: Webhook secret
-  from: '[a-zA-Z0-9]{8}'
-  generate: expression
-  name: WEBHOOK_SECRET
   required: true
 objects:
 - apiVersion: v1
