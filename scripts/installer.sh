@@ -56,6 +56,9 @@ echo "Installing ose-recycler image on all of the nodes"
 ansible nodes -m shell -a "docker pull registry.access.redhat.com/openshift3/ose-recycler:latest"
 ansible nodes -m shell -a "docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.27"
 
+#Install the openshift-applier role so I can use it below.
+ansible-galaxy install -r requirements.yml
+
 
 #Create the PVs on the support host, and then create PVs on bastion.
 ansible-playbook -i /etc/ansible/hosts /root/openshift-advanced-deployment-homework/file/ansible_create_pvs.yml

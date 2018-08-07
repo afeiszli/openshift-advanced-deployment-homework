@@ -5,6 +5,6 @@ openshift_cluster_content:
   content:
   - name: "ocp_homework"
     template: "{{ playbook_dir }}/templates/ocp_homework.yml"
-    params: "{{ playbook_dir }}/params/ocp_homework"
+    params: "{{ playbook_dir }}/inventory/params/ocp_homework"
     tags:
     - ocp_homework

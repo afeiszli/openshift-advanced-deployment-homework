@@ -6,7 +6,7 @@ openshift_cluster_content:
   - name: "cicd-template"
     namespace: "{{ jenkins_namespace }}"
     template: "{{ playbook_dir }}/templates/cicd-template-openshift-tasks.yml"
-    params: "{{ playbook_dir }}/params/cicd-template"
+    params: "{{ playbook_dir }}/inventory/params/cicd-template"
     tags:
     - jenkins
     - cicd-template

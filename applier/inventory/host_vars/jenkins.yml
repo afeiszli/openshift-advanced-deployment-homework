@@ -6,6 +6,6 @@ openshift_cluster_content:
   - name: "jenkins"
     namespace: "{{ jenkins_namespace }}"
     template: "{{ playbook_dir }}/templates/jenkins.yml"
-    params: "{{ playbook_dir }}/params/jenkins"
+    params: "{{ playbook_dir }}/inventory/params/jenkins"
     tags:
     - jenkins

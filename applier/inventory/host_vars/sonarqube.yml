@@ -6,6 +6,6 @@ openshift_cluster_content:
   - name: "sonarqube"
     namespace: "{{ sonarqube_namespace }}"
     template: "{{ playbook_dir }}/templates/sonarqube.yml"
-    params: "{{ playbook_dir }}/params/sonarqube"
+    params: "{{ playbook_dir }}/inventory/params/sonarqube"
     tags:
     - sonarqube
