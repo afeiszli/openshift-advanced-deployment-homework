@@ -36,13 +36,6 @@ objects:
       name: cicd-pipeline
     name: tasks-pipeline
   spec:
-    triggers:
-      - type: GitHub
-        github:
-          secret: ${WEBHOOK_SECRET}
-      - type: Generic
-        generic:
-          secret: ${WEBHOOK_SECRET}
     runPolicy: Serial
     containers:
       - env:
@@ -95,7 +88,7 @@ objects:
                   }
                 }
               }
-              stage('Build Image') {
+              stage('Build Image 1') {
                 steps {
                   sh "rm -rf oc-build && mkdir -p oc-build/deployments"
                   sh "cp target/openshift-tasks.war oc-build/deployments/ROOT.war"
